@@ -11,7 +11,7 @@ library(DBI)
 library(RSQLite)
 library(plotrix)
 ## WORK SPACE
-setwd("G:/PROJET/Article/CC_Eau/BV_Nowkuy_CC/")
+setwd("D:/Recherche/Article_KIEMA")
 
 ## DATA BASE
 DataBase <- RSQLite::dbConnect(RSQLite::SQLite(),"data/DataBase.sqlite")

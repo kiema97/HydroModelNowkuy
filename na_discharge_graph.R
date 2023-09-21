@@ -11,7 +11,7 @@ library(RSQLite)
 library(RColorBrewer)
 
 ## WORK SPACE
-setwd("E:/PROJETS/BV_Nowkuy_CC")
+setwd("D:/Recherche/Article_KIEMA")
 
 ## DATA BASE
 DataBase <- RSQLite::dbConnect(RSQLite::SQLite(),"data/DataBase.sqlite")
@@ -30,25 +30,29 @@ debit_na <- debit_data%>%
   summarise(pct_na=round(mean(is.na(Debit))*100,2))
 
 ## MISSING DATA GRAPH
-ggplot(debit_na, aes(x=YYYY,y=MM)) +
+missplot <- ggplot(debit_na, aes(x=YYYY,y=MM)) +
   geom_raster(aes(fill = pct_na))+
+  geom_vline(xintercept = 1984, linetype = 4, linewidth = 1, colour = "blue") +
+  geom_vline(xintercept = 2008, linetype = 4, linewidth = 1, colour = "blue") +
   scale_fill_continuous(low = "#FFFFFF",high = "#CB181D")+
   #scale_fill_gradient(low = "#999999",high = "#000000")+
   scale_x_continuous(breaks=seq(1983,2018,4),expand = c(0,0))+
   scale_y_continuous(breaks=1:12,labels=month.abb,expand = c(0,0))+
   theme_bw()+
-  xlab("Years")+
-  ylab("Months")+
-  theme(axis.text.x =element_text(angle = 90,face = "bold",colour = "black"),
-        axis.text.y = element_text(face = "bold",colour = "black"),
-        axis.title.x = element_text(face = "bold",colour = "black",size = 12),
-        axis.title.y = element_text(face = "bold",colour = "black",size = 12),
+  xlab("\nYears")+
+  ylab("Months\n")+
+  theme(axis.text.x =element_text(angle = 0,colour = "black"),
+        axis.text.y = element_text(colour = "black"),
+        axis.title.x = element_text(colour = "black",size = 12),
+        axis.title.y = element_text(colour = "black",size = 12),
         legend.text.align =0,
         legend.key.height = unit(0.8,"cm"),
-        legend.title = element_text(face = "bold",colour = "black",hjust = 0.5,vjust = 0.5),
-        legend.text = element_text(face = "bold",colour = "black"))+
-  guides(fill = guide_legend(title="(%)",reverse = TRUE,title.hjust = 0))
+        legend.title = element_text(colour = "black",hjust = 0.5,vjust = 0.5),
+        legend.text = element_text(colour = "black"))+
+  guides(fill = guide_legend(title="Percent. (%)",reverse = TRUE,title.hjust = 0))
 
-graph_path <- "output/tendance"
+missplot
+
+graph_path <- "graphs"
 ggsave(filename =file.path(graph_path,"na_discharge.png") ,
-       device ="png" ,width =6 ,height =4 ,dpi = 800)
+       missplot ,width =6 ,height =3 ,dpi = 400)
